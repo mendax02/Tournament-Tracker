@@ -45,16 +45,45 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return output;
         }
 
+        public static List<PersonModel> ConvertToPersonModels(this List<string> lines)
+        {
+            var output = new List<PersonModel>();
+            foreach (var line in lines)
+            {
+                string[] cols = line.Split(',');
+                PersonModel person = new PersonModel();
+                person.Id = Convert.ToInt32(cols[0]);
+                person.FirstName = cols[1];
+                person.LastName = cols[2];
+                person.Email = cols[3];
+                person.CellphoneNumber = cols[4];
+                output.Add(person);
+            }
+
+            return output;
+        }
+
         public static void SaveToPrizeFile(this List<PrizeModel> models, string fileName)
         {
             List<string> lines = new List<string>();
-            foreach(PrizeModel p in models)
+            foreach (PrizeModel p in models)
             {
                 lines.Add($"{p.Id},{p.PlaceNumber},{p.PlaceName},{p.PrizeAmount},{p.PrizePercentage}");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
 
+        }
+
+        public static void SaveToPeopleFile(this List<PersonModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+            foreach (PersonModel p in models)
+            {
+                lines.Add($"{p.Id},{p.FirstName},{p.LastName},{p.Email},{p.CellphoneNumber}");
+            }
+
+            File.WriteAllLines(fileName.FullFilePath(), lines);
         }
     }
 }
