@@ -17,10 +17,11 @@ namespace TournamentViewer
         private List<PersonModel> availableTeamMembers = GlobalConfig.Connection.GetPerson_All();
         private List<PersonModel> selectedTeamMembers = new List<PersonModel>();
 
-
-        public CreateTeamForm()
+        private ITeamRequester callingForm;
+        public CreateTeamForm(ITeamRequester caller)
         {
             InitializeComponent();
+            callingForm = caller;
             // SampleData();
             WireUpLists();
         }
@@ -130,11 +131,12 @@ namespace TournamentViewer
             {
                 t.TeamName = teamNameValue.Text;
                 t.TeamMembers = selectedTeamMembers;
-                t = GlobalConfig.Connection.CreateTeam(t);
+                GlobalConfig.Connection.CreateTeam(t);
+                callingForm.TeamComplete(t);
+                Close(); 
             }
             else
                 MessageBox.Show("Please enter Team Name");
-
         }
     }
 }
